@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="weather_container">
+        <div class="search_container">
+            <input type="text" class="search" >
+            <button>SEARCH</button>
+        </div>
+    </div>
+    <div class="NEW">
+    <div class="weather">
+        <h1 class="city">
+            Wheather in
+        </h1>
+        <p class="temp">
+
+        </p>
+        <img src="" class="icon" alt="">
+        <p class="description">
+            ..
+        </p>
+        <p class="humidity">
+            ..
+        </p>
+        <p class="wind">
+            ..
+        </p>
+    </div>
+</div>
+    <script>
+        const apiKey ="b9ef5f5baa60e61a4f35d608c05a5e1d"
+        const cities = document.querySelector('.city')
+        const temperature = document.querySelector('.temp')
+        const ic = document.querySelector('.icon')
+        const desc = document.querySelector('.description')
+        const hum = document.querySelector('.humidity')
+        const win = document.querySelector('.wind')
+        let weather_result = {
+            fetch_weather:function(city){
+                fetch("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+apiKey)
+                .then((response) =>response.json())
+                .then((info) =>this.display_weather(info))
+            },
+            display_weather: function(info){
+                const {name} = info
+                const {icon,description} =info.weather[0]
+                const {speed} = info.wind
+                const {temp,humidity} = info.main
+                cities.textContent="Weather In " + name
+                ic.source ="https://openweathermap.org/img/wn/" + icon + ".png"
+                temperature.textContent="Temperature is " + [(temp-32)*5]/9 + "° Celcius"
+                desc.textContent = "Description: " + description
+                hum.textContent = "Humidity is " + humidity +"%"
+                win.textContent = "Wind is " + speed + " KM/h"
+            },
+            search: function(){
+                this.fetch_weather(document.querySelector('.search').value)
+            }
+        }
+        document.querySelector('button').addEventListener('click', function(){
+            weather_result.search()
+        })
+    </script>
+</body>
+</html>
